@@ -73,6 +73,22 @@ MODEL_INFO.info({"name": MODEL_NAME, "classes": ",".join(CLASSES)})
 app = Flask(__name__)
 
 
+@app.route("/", methods=["GET"])
+def index():
+    """Root endpoint providing API information."""
+    return jsonify({
+        "project": "NEU-DET Steel Defect Classifier API",
+        "author": "Davit Zarly",
+        "username": "davit_zarly",
+        "status": "online",
+        "endpoints": {
+            "health": "/health",
+            "predict": "POST /predict with multipart/form-data 'image'",
+            "metrics": "/metrics",
+        },
+    })
+
+
 @app.route("/health", methods=["GET"])
 def health():
     """Health check endpoint."""

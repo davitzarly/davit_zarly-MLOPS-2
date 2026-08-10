@@ -68,7 +68,7 @@ Lihat di:
 | **Metrik evaluasi** | SparseCategoricalAccuracy (threshold Evaluator ≥ 0.80), SparseCategoricalCrossentropy, SparseTopKCategoricalAccuracy (k=3). |
 | **Performa model** | Exp 1 CNN: **98.61% eval accuracy**. Exp 2 MobileNetV2: **99.44% eval accuracy**. Model terbaik: MobileNetV2. |
 | **Deployment** | Flask API (`app.py`) + TensorFlow Serving + Dockerfile. Endpoint: `/predict`, `/health`, `/metrics`. |
-| **Web app** | `https://davit-zarly-neu-det.up.railway.app` — Flask API gateway di Railway. |
+| **Web app** | `https://davitzarly-mlops-2-production.up.railway.app` — Flask API gateway di Railway. |
 | **Monitoring** | Prometheus scraping `/metrics` (interval 15s). Grafana dashboard di `monitoring/grafana/dashboards/neu-det-dashboard.json`. |
 
 ---
@@ -169,4 +169,4 @@ python experiments/exp2_mobilenet.py
 | Flask API `/predict` | ✅ Siap |
 | Prometheus monitoring | ✅ Siap |
 | Grafana dashboard | ✅ Siap |
-| Deployment cloud | ⚠️ Perlu akun Railway/Heroku |
+| Deployment cloud | ✅ Active (`https://davitzarly-mlops-2-production.up.railway.app`) |

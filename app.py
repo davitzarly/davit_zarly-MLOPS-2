@@ -2,8 +2,8 @@
 
 This app receives an uploaded JPEG image, base64-encodes the raw bytes to
 match the model's ``image_bytes`` serving signature, calls TensorFlow
-Serving (localhost:8501 by default) and returns the predicted class name
-together with a confidence score.
+Serving (localhost:8501 by default) or uses direct SavedModel fallback, and
+returns the predicted class name together with a confidence score.
 
 Prometheus metrics are exposed at /metrics for monitoring.
 """
@@ -43,6 +43,8 @@ CLASSES: List[str] = [
     "scratches",
 ]
 
+LOCAL_MODEL = None
+
 # --------------------------------------------------------------------------- #
 # Prometheus metrics
 # --------------------------------------------------------------------------- #
@@ -81,6 +83,7 @@ def health():
 @PREDICT_LATENCY.time()
 def predict():
     """Run a single prediction on the uploaded image."""
+    global LOCAL_MODEL
     PREDICT_TOTAL.inc()
 
     if "image" not in request.files:
@@ -97,22 +100,31 @@ def predict():
         PREDICT_ERRORS.inc()
         return jsonify({"error": f"failed to read uploaded image: {exc}"}), 400
 
-    # The model's serving signature (see modules/trainer.py::_get_serve_image_bytes_fn)
-    # decodes and resizes the JPEG itself, so we just forward the raw bytes,
-    # base64-encoded as required by TF Serving's REST API for string tensors.
-    payload = {"instances": [{"image_bytes": {"b64": image_b64}}]}
+    # Option 1: Try TF Serving REST API
+    probs = None
     try:
-        resp = requests.post(TF_SERVING_URL, json=payload, timeout=10)
-        resp.raise_for_status()
-    except Exception as exc:  # noqa: BLE001
-        PREDICT_ERRORS.inc()
-        return jsonify({"error": f"TF Serving request failed: {exc}"}), 502
+        payload = {"instances": [{"image_bytes": {"b64": image_b64}}]}
+        resp = requests.post(TF_SERVING_URL, json=payload, timeout=2)
+        if resp.status_code == 200:
+            probs = np.asarray(resp.json()["predictions"][0], dtype=np.float32)
+    except Exception:
+        probs = None
 
-    try:
-        probs = np.asarray(resp.json()["predictions"][0], dtype=np.float32)
-    except (KeyError, IndexError, ValueError) as exc:
-        PREDICT_ERRORS.inc()
-        return jsonify({"error": f"invalid response from TF Serving: {exc}"}), 502
+    # Option 2: Fallback to direct SavedModel inference
+    if probs is None:
+        try:
+            import tensorflow as tf
+            if LOCAL_MODEL is None:
+                model_dir = os.path.join(os.path.dirname(__file__), "serving_model", "davit_zarly_pipeline", "1")
+                LOCAL_MODEL = tf.saved_model.load(model_dir)
+            serve_fn = LOCAL_MODEL.signatures["serving_default"]
+            tf_b64 = tf.constant([raw_bytes], dtype=tf.string)
+            res = serve_fn(image_bytes=tf_b64)
+            key = list(res.keys())[0]
+            probs = res[key].numpy()[0]
+        except Exception as exc:  # noqa: BLE001
+            PREDICT_ERRORS.inc()
+            return jsonify({"error": f"Inference failed: {exc}"}), 502
 
     top_idx = int(np.argmax(probs))
     return jsonify({

@@ -4,7 +4,7 @@ tensorflow==2.13.1
 tfx==1.14.0
 tensorflow-transform==1.14.0
 tensorflow-data-validation==1.14.0
-tensorflow-model-analysis==0.44.0
+tensorflow-model-analysis==0.45.0
 tensorflow-serving-api==2.13.1
 keras-tuner==1.4.6
 

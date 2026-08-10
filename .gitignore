@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter
+.ipynb_checkpoints
+
+# TFX artefacts
+pipelines/
+metadata/
+*.db
+tfx_metadata/
+
+# Models (will be produced by pipeline)
+serving_model/*
+!serving_model/.gitkeep
+
+# Data (too large for git)
+data/NEU-DET/
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db

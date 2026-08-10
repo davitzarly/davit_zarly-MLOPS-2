@@ -1,0 +1,26 @@
+[MASTER]
+ignore=__pycache__,.git,venv
+extension-pkg-whitelist=
+
+[MESSAGES CONTROL]
+disable=
+    missing-docstring,
+    too-few-public-methods,
+    too-many-locals,
+    too-many-arguments,
+    import-outside-toplevel,
+    no-name-in-module,
+    no-member,
+    import-error,
+    relative-beyond-top-level,
+    wrong-import-position,
+    duplicate-code
+
+[FORMAT]
+max-line-length=100
+indent-string='    '
+
+[REPORTS]
+output-format=text
+reports=no
+score=yes

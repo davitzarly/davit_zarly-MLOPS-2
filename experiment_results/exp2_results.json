@@ -1,0 +1,115 @@
+{
+  "experiment": "Exp2_MobileNetV2_TransferLearning",
+  "image_size": 128,
+  "epochs_phase1": 15,
+  "epochs_phase2": 20,
+  "train_time_minutes": 10.1,
+  "accuracy": 0.9944,
+  "precision_macro": 0.9945,
+  "recall_macro": 0.9944,
+  "f1_macro": 0.9944,
+  "top3_accuracy": 1.0,
+  "best_val_accuracy_phase1": 0.9972,
+  "best_val_accuracy_phase2": 1.0,
+  "confusion_matrix": [
+    [
+      60,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      59,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      60,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      59,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      60,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      60
+    ]
+  ],
+  "classification_report": {
+    "crazing": {
+      "precision": 0.9836065573770492,
+      "recall": 1.0,
+      "f1-score": 0.9917355371900827,
+      "support": 60.0
+    },
+    "inclusion": {
+      "precision": 1.0,
+      "recall": 0.9833333333333333,
+      "f1-score": 0.9915966386554622,
+      "support": 60.0
+    },
+    "patches": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 60.0
+    },
+    "pitted_surface": {
+      "precision": 1.0,
+      "recall": 0.9833333333333333,
+      "f1-score": 0.9915966386554622,
+      "support": 60.0
+    },
+    "rolled-in_scale": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 60.0
+    },
+    "scratches": {
+      "precision": 0.9836065573770492,
+      "recall": 1.0,
+      "f1-score": 0.9917355371900827,
+      "support": 60.0
+    },
+    "accuracy": 0.9944444444444445,
+    "macro avg": {
+      "precision": 0.9945355191256832,
+      "recall": 0.9944444444444445,
+      "f1-score": 0.9944440586151817,
+      "support": 360.0
+    },
+    "weighted avg": {
+      "precision": 0.994535519125683,
+      "recall": 0.9944444444444445,
+      "f1-score": 0.9944440586151817,
+      "support": 360.0
+    }
+  }
+}

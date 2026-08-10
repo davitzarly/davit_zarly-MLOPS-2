@@ -1,0 +1,16 @@
+# ====================================================================== #
+# Grafana provisioning: datasources
+# ====================================================================== #
+# Registers the Prometheus server (running as the "prometheus" service in
+# docker-compose.yml) as a Grafana datasource named "Prometheus", which is
+# the name referenced by every panel in neu-det-dashboard.json.
+# ====================================================================== #
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true

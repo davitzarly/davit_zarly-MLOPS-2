@@ -1,0 +1,54 @@
+# Optional: docker-compose untuk menjalankan TF Serving + Flask app sekaligus
+# Berguna saat development lokal sebelum deploy ke cloud.
+version: "3.8"
+
+services:
+  tf_serving:
+    image: tensorflow/serving:2.13.1
+    container_name: neu_det_serving
+    ports:
+      - "8501:8501"
+      - "8500:8500"
+    volumes:
+      - ./serving_model/davit_zarly_pipeline:/models/neu_det_cnn
+    environment:
+      - MODEL_NAME=neu_det_cnn
+    command: --rest_api_port=8501
+
+  app:
+    build: .
+    container_name: neu_det_app
+    ports:
+      - "8080:8080"
+    environment:
+      - TF_SERVING_URL=http://tf_serving:8501/v1/models/neu_det_cnn:predict
+      - MODEL_NAME=neu_det_cnn
+      - PORT=8080
+    depends_on:
+      - tf_serving
+
+  prometheus:
+    build: ./monitoring
+    container_name: neu_det_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus.config:/etc/prometheus/prometheus.config
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - app
+
+  grafana:
+    build:
+      context: ./monitoring
+      dockerfile: grafana-Dockerfile
+    container_name: neu_det_grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus

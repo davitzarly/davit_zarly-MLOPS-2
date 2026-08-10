@@ -1,0 +1,58 @@
+# ====================================================================== #
+# Prometheus main configuration file
+# ====================================================================== #
+# File ini dibaca oleh Prometheus pada startup dan menentukan:
+#   - global scrape interval & evaluation interval
+#   - scrape targets (jobs)
+#   - rule files (recording & alerting rules)
+# ====================================================================== #
+
+global:
+  scrape_interval: 15s          # Setiap 15 detik scrape semua target
+  evaluation_interval: 15s      # Setiap 15 detik evaluasi rule
+  scrape_timeout: 10s           # Timeout per scrape
+
+# ---------------------------------------------------------------- #
+# Alert & recording rules (opsional)
+# ---------------------------------------------------------------- #
+# rule_files:
+#   - "rules/*.yml"
+
+# ---------------------------------------------------------------- #
+# Scrape configurations
+# ---------------------------------------------------------------- #
+scrape_configs:
+  # 1. Self-monitoring Prometheus
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # 2. NEU-DET model serving (Flask app /metrics)
+  # "app:8080" is the docker-compose service name/port (containers on the
+  # same compose network resolve each other by service name, not
+  # localhost). If you run app.py directly on the host instead of via
+  # docker-compose, change this target to "localhost:8080".
+  - job_name: "neu_det_model"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["app:8080"]
+        labels:
+          service: "neu-det-classifier"
+          environment: "docker-compose"
+
+  # 3. (Opsional) Cadangan URL cloud untuk scraping dari deployment Railway
+  # - job_name: "neu_det_model_cloud"
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets: ["<nama-project>.up.railway.app:443"]
+  #       labels:
+  #         service: "neu-det-classifier"
+  #         environment: "production"
+
+# ---------------------------------------------------------------- #
+# Alerting (opsional - untuk integrasi Alertmanager)
+# ---------------------------------------------------------------- #
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ["localhost:9093"]

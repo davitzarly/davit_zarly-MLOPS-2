@@ -44,6 +44,14 @@ CLASSES: List[str] = [
 ]
 
 LOCAL_MODEL = None
+try:
+    import tensorflow as tf
+    _model_dir = os.path.join(os.path.dirname(__file__), "serving_model", "davit_zarly_pipeline", "1")
+    if os.path.exists(_model_dir):
+        LOCAL_MODEL = tf.saved_model.load(_model_dir)
+        print("Successfully preloaded SavedModel at startup.")
+except Exception as _exc:
+    print(f"SavedModel preload info: {_exc}")
 
 # --------------------------------------------------------------------------- #
 # Prometheus metrics

@@ -11,7 +11,7 @@
 # dari docker-compose pada deployment produksi.
 # ====================================================================== #
 
-FROM python:3.10-slim as runtime
+FROM python:3.10-slim AS runtime
 
 # ---------------------------------------------------------------- #
 # 1. System dependencies

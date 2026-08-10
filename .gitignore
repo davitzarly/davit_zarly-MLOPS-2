@@ -18,9 +18,8 @@ metadata/
 *.db
 tfx_metadata/
 
-# Models (will be produced by pipeline)
-serving_model/*
-!serving_model/.gitkeep
+# Models
+# serving_model/ is included for Railway deployment
 
 # Data (too large for git)
 data/NEU-DET/

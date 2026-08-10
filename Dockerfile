@@ -33,9 +33,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ---------------------------------------------------------------- #
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements-docker.txt requirements.txt
 RUN pip install --upgrade pip && \
-    pip install --prefer-binary --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # ---------------------------------------------------------------- #
 # 3. Application code & model

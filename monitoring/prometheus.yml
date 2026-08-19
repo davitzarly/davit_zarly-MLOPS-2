@@ -40,14 +40,14 @@ scrape_configs:
           service: "neu-det-classifier"
           environment: "docker-compose"
 
-  # 3. (Opsional) Cadangan URL cloud untuk scraping dari deployment Railway
-  # - job_name: "neu_det_model_cloud"
-  #   metrics_path: /metrics
-  #   static_configs:
-  #     - targets: ["<nama-project>.up.railway.app:443"]
-  #       labels:
-  #         service: "neu-det-classifier"
-  #         environment: "production"
+  - job_name: "neu_det_model_cloud"
+    metrics_path: /metrics
+    scheme: https
+    static_configs:
+      - targets: ["davitzarly-mlops-2-production.up.railway.app"]
+        labels:
+          service: "neu-det-classifier"
+          environment: "production"
 
 # ---------------------------------------------------------------- #
 # Alerting (opsional - untuk integrasi Alertmanager)

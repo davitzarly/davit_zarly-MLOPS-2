@@ -15,11 +15,5 @@ EXPOSE 9090
 
 # Command default dari image resmi sudah memuat config.yml,
 # di sini kita override agar memakai prometheus.yml yang sudah disalin.
-CMD [
-    "--config.file=/etc/prometheus/prometheus.yml",
-    "--storage.tsdb.path=/prometheus",
-    "--web.console.libraries=/usr/share/prometheus/console_libraries",
-    "--web.console.templates=/usr/share/prometheus/consoles",
-    "--web.enable-lifecycle"
-]
+CMD ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.console.libraries=/usr/share/prometheus/console_libraries", "--web.console.templates=/usr/share/prometheus/consoles", "--web.enable-lifecycle"]
 ENTRYPOINT ["/bin/prometheus"]
